@@ -3,15 +3,12 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const getCDNPath = require('@cofe/jss-deploy').getCDNPath;
 // const ESBuildPlugin = require('esbuild-webpack-plugin').default;
 const TerserPlugin = require("terser-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const infoConf = require('../infoConf');
-
-const CDNPath = '//' + getCDNPath(undefined, true) + '/';
 
 module.exports = {
     mode: 'production',
@@ -24,7 +21,7 @@ module.exports = {
         path: infoConf.PATH.dist,
         filename: `static/js/[name].[chunkhash:8].js`,
         chunkFilename: `static/js/[chunkhash:8].chunk.js`,
-        publicPath: CDNPath,
+        publicPath: '/',
         assetModuleFilename: 'static/media/[hash][ext][query]'
     },
     optimization: {
