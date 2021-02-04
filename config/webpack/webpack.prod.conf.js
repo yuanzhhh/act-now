@@ -3,10 +3,10 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-// const ESBuildPlugin = require('esbuild-webpack-plugin').default;
 const TerserPlugin = require("terser-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const ESBuildPlugin = require('esbuild-webpack-plugin').default;
 
 const infoConf = require('../infoConf');
 

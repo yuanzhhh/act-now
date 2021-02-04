@@ -2,4 +2,4 @@
 
 'use strict';
 
-require('./react-g');
+require('./main');
