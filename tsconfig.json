@@ -1,47 +1,29 @@
 {
-    "compileOnSave": false,
     "compilerOptions": {
-        "skipDefaultLibCheck": false,
-        "skipLibCheck": true,
-        "experimentalDecorators": true,
-        "reactNamespace": "React",
-        "jsx": "react",
-        "baseUrl": "./src",
-        "moduleResolution": "node",
-        "target": "es2015",
-        "module": "esNext",
-        "noImplicitThis": false,
-        "strict": false,
-        "strictNullChecks": true,
-        "noImplicitAny": false,
-        "allowSyntheticDefaultImports": true,
-        "sourceMap": false,
-        "allowJs": false,
+        "sourceMap": true,
+        "target": "ES2019",
+        "module": "commonjs",
+        "declaration": true,
+        "outDir": "lib",
         "rootDir": "src",
-        "lib": [
-            "dom",
-            "es5",
-            "es6",
-            "es2018.promise",
-            "esnext.intl",
-            "es2017.intl",
-            "es2018.intl"
-        ],
+        "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "paths": {
-            "@/*" :["./*"]
-        }
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "moduleResolution": "node",
+        "typeRoots": [
+            "./typings",
+            "./node_modules/@types"
+        ],
+        "allowSyntheticDefaultImports": false,
+        "esModuleInterop": false
+
     },
     "include": [
-        "./src"
+        "src/**/*.ts"
     ],
     "exclude": [
-        "node_modules",
-        "build",
-        "dist",
-        "__tests__",
-        "dll"
-    ],
-    "types": ["typePatches"]
+        "node_modules/**"
+    ]
 }
