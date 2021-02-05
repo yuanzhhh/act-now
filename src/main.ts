@@ -1,4 +1,3 @@
-// import 'regenerator-runtime/runtime';
 import { program } from 'commander';
 import onions, { MiddlewareFun } from 'onions';
 
