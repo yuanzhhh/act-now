@@ -1,6 +1,6 @@
 import start from './start';
-import { Middleware } from 'onions';
+import { MiddlewareFun } from 'onions';
 
 export default [
   start,
-] as Middleware;
+] as MiddlewareFun[];

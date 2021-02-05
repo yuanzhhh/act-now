@@ -1,10 +1,10 @@
 import { program } from 'commander';
-import onions, { MiddlewareFun } from 'onions';
+import onions from 'onions';
 
 import command from './command/index';
 
 (async () => {
-  let beforeMiddleware = [...(command as MiddlewareFun[])];
+  const beforeMiddleware = [...command];
 
   const ready = onions(() => {
     console.log('Done!');
