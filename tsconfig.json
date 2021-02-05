@@ -16,9 +16,8 @@
             "./typings",
             "./node_modules/@types"
         ],
-        "allowSyntheticDefaultImports": false,
+        "allowSyntheticDefaultImports": true,
         "esModuleInterop": false
-
     },
     "include": [
         "src/**/*.ts"

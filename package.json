@@ -3,13 +3,9 @@
     "version": "1.0.0",
     "license": "MIT",
     "scripts": {
-        "precommit": "npm run lint-staged",
-        "lint-staged": "lint-staged",
-        "lint": "",
-        "lint:fix": "",
-        "dev": "cross-env NODE_ENV=development webpack --config config/webpack/webpack.dll.conf.js && cross-env NODE_ENV=development nodemon ./config/server/index.js",
-        "build": "cross-env NODE_ENV=production webpack --config ./config/webpack/webpack.config.js",
-        "commitmsg": "commitlint -e $GIT_PARAMS"
+        "dev": "tsc --watch",
+        "clean": "rimraf ./lib",
+        "build": "npm run clean && tsc"
     },
     "bin": {
         "act-now": "./bin/act-now.js"
@@ -23,7 +19,6 @@
         "@babel/preset-env": "^7.6.3",
         "@babel/preset-react": "^7.6.3",
         "@babel/runtime": "^7.7.4",
-        "@commitlint/cli": "^8.2.0",
         "@hot-loader/react-dom": "^17.0.1",
         "@koa/router": "^9.4.0",
         "@types/classnames": "^2.2.4",
@@ -70,7 +65,7 @@
         "nodemon": "^2.0.7",
         "npm-run-all": "^4.1.5",
         "nyan-progress-webpack-plugin": "^1.2.0",
-        "onions": "^4.0.2",
+        "onions": "^4.0.4",
         "postcss": "^8.2.4",
         "postcss-flexbugs-fixes": "^5.0.2",
         "postcss-loader": "^4.2.0",
@@ -78,6 +73,7 @@
         "react-hot-loader": "^4.13.0",
         "regenerator-runtime": "^0.13.7",
         "request": "^2.88.0",
+        "rimraf": "^3.0.2",
         "style-loader": "^2.0.0",
         "terser-webpack-plugin": "^5.1.1",
         "thread-loader": "^3.0.1",
@@ -91,8 +87,5 @@
         "webpack-hot-middleware": "^2.25.0",
         "webpack-merge": "^5.7.3"
     },
-    "dependencies": {},
-    "lint-staged": {
-        "src/**/*.ts": "npm run lint --"
-    }
+    "dependencies": {}
 }
