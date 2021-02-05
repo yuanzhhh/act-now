@@ -4,11 +4,9 @@ import onions from 'onions';
 import command from './command/index';
 
 (async () => {
-  const beforeMiddleware = [...command];
+  const commands = [...command];
 
-  const ready = onions(() => {
-    console.log('Done!');
-  }, beforeMiddleware, []);
+  const ready = onions(commands);
 
   await ready(program);
 
