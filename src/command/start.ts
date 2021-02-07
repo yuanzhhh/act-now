@@ -4,6 +4,7 @@ import { Command } from 'commander';
 
 const start = (next: UnknownFun) => (program: Command) => {
   program
+    .option('-o, --output', 'Build output path')
     .command('start <project>')
     .description('Development Mode - Start project; 开发模式-启动项目')
     .action((project) => {

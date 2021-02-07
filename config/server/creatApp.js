@@ -55,7 +55,11 @@ function koaHotMiddleware(hotMiddleware) {
         next(await new Promise((resolve) => hotMiddleware(ctx.req, ctx.res, resolve)));
 };
 
-module.exports = () => {
+module.exports = (options) => {
+    const { entry } = options;
+
+    webpackConfig.entry.index[2] = entry;
+
     const app = new Koa();
 
     app.use(router.routes(), router.allowedMethods());
