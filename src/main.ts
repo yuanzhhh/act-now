@@ -9,6 +9,6 @@ import command from './command/index';
   const ready = onions(commands);
 
   await ready(program);
-})();
 
-program.parse(process.argv);
+  program.parse(process.argv);
+})();
