@@ -56,10 +56,9 @@ function koaHotMiddleware(hotMiddleware) {
 };
 
 module.exports = (options) => {
-    const { entry, outPath } = options;
+    const { entry } = options;
 
     webpackConfig.entry.index[2] = entry;
-    webpackConfig.output.path = outPath;
 
     const app = new Koa();
 
