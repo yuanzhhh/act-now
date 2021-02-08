@@ -4,7 +4,7 @@
         "target": "ES2019",
         "module": "commonjs",
         "declaration": true,
-        "outDir": "lib",
+        "outDir": "bin",
         "rootDir": "src",
         "strict": true,
         "noUnusedLocals": true,
