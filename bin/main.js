@@ -7,6 +7,6 @@ const index_1 = require("./command/index");
     const commands = [...index_1.default];
     const ready = onions_1.default(commands);
     await ready(commander_1.program);
-    commander_1.program.parse(process.argv);
 })();
+commander_1.program.parse(process.argv);
 //# sourceMappingURL=main.js.map

@@ -1,1 +1,0 @@
-{"version":3,"file":"assets.js","sourceRoot":"","sources":["../../../../config/webpack/rules/assets.ts"],"names":[],"mappings":";AAAA,MAAM,CAAC,OAAO,GAAG;IACb;QACI,IAAI,EAAE,8BAA8B;QACpC,IAAI,EAAE,gBAAgB;KACzB;IACD;QACI,IAAI,EAAE,mCAAmC;QACzC,IAAI,EAAE,gBAAgB;KACzB;CACJ,CAAC"}

@@ -5,11 +5,11 @@
     "main": "index.js",
     "scripts": {
         "dev": "tsc --watch",
-        "clean": "rimraf ./lib",
+        "clean": "rimraf ./bin",
         "build": "npm run clean && tsc"
     },
     "bin": {
-        "act-now": "./bin/act-now.js"
+        "act-now": "./bin/index.js"
     },
     "devDependencies": {
         "@babel/core": "^7.12.13",

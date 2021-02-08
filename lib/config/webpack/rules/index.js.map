@@ -1,1 +1,0 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../config/webpack/rules/index.ts"],"names":[],"mappings":";AAAA,MAAM,MAAM,GAAG,OAAO,CAAC,UAAU,CAAC,CAAC;AACnC,MAAM,OAAO,GAAG,OAAO,CAAC,WAAW,CAAC,CAAC;AACrC,MAAM,MAAM,GAAG,OAAO,CAAC,UAAU,CAAC,CAAC;AAEnC,MAAM,CAAC,OAAO,GAAG;IACf,GAAG,OAAO;IACV,GAAG,MAAM;IACT,GAAG,MAAM;CACV,CAAA"}
