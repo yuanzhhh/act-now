@@ -7,7 +7,6 @@ dll
 coverage
 lib-cov
 bundle
-lib
 
 stats.json
 manifest.json

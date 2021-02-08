@@ -1,0 +1,21 @@
+declare const webpack: any;
+declare const middleware: any;
+declare const Koa: any;
+declare const http: any;
+declare const https: any;
+declare const fs: any;
+declare const path: any;
+declare const hotMid: any;
+declare const Router: any;
+declare const webpackConfig: any;
+declare const SERVER: any;
+declare const router: any;
+declare const compiler: any;
+declare const keyOpts: {
+    key: any;
+    cert: any;
+};
+declare const instance: any;
+declare const hotCompiler: any;
+declare function koaDevMiddleware(devMiddleware: any): (ctx: any, next: any) => Promise<any>;
+declare function koaHotMiddleware(hotMiddleware: any): (ctx: any, next: any) => Promise<any>;
