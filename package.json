@@ -1,7 +1,6 @@
 {
     "name": "act-now",
     "version": "1.0.6",
-    "license": "MIT",
     "main": "index.js",
     "scripts": {
         "dev": "tsc --watch",
@@ -11,6 +10,9 @@
     "bin": {
         "act-now": "./bin/index.js"
     },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
     "devDependencies": {
         "@babel/core": "^7.12.13",
         "@babel/plugin-proposal-class-properties": "^7.8.3",
