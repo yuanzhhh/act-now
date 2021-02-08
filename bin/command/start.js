@@ -7,7 +7,6 @@ const spawn = require('cross-spawn');
 // const dllConf = require('../../config/');
 const start = (next) => (program) => {
     program
-        .option('-o, --output', 'Build output path')
         .command('start <project>')
         .description('Development Mode - Start project; 开发模式-启动项目')
         .action((_project) => {
