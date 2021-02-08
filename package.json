@@ -1,6 +1,6 @@
 {
     "name": "act-now",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "main": "index.js",
     "scripts": {
         "dev": "tsc --watch",
