@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = ({ isDevelopment }) => ({
     presets: [
         [
             '@babel/preset-env', {
@@ -11,7 +11,7 @@ module.exports = {
         [
             '@babel/preset-react', {
                 runtime: 'automatic',
-                development: process.env.NODE_ENV === 'development',
+                development: isDevelopment,
                 importSource: '@welldone-software/why-did-you-render',
             }
         ],
@@ -30,4 +30,4 @@ module.exports = {
             },
         ],
     ],
-};
+});

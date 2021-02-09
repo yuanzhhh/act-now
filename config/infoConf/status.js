@@ -1,7 +1,7 @@
 const env = process.env;
 
-const __DEV__ = (env.NODE_ENV === 'development');
-const __PROD__ = (env.NODE_ENV === 'production');
+const __DEV__ = true;
+const __PROD__ = false;
 const __ENV__ = env.NODE_ENV;
 
 module.exports = {

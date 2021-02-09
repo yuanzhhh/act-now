@@ -13,15 +13,13 @@ module.exports = {
             '.json',
             '.ts',
             '.tsx',
-            '.css',
-            '.less',
         ],
 
         alias: {
-            "@": PATH.src,
+            "@": '/Users/jryuanentai/work/jtalk/laboratory/fe-jtalk-client-im/src'
         },
 
-        modules: [PATH.src, 'node_modules'],
+        modules: ['/Users/jryuanentai/work/jtalk/laboratory/fe-jtalk-client-im/src', 'node_modules'],
     },
     module: { rules },
     plugins: [

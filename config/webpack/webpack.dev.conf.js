@@ -2,7 +2,6 @@ const webpack = require('webpack');
 const path = require('path');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const NyanProgressPlugin = require('nyan-progress-webpack-plugin');
@@ -21,6 +20,7 @@ module.exports = {
     resolve: {
         alias: {
             'react-dom': '@hot-loader/react-dom',
+            'src': process.cwd() + '/src'
         }
     },
     entry: {
@@ -49,7 +49,7 @@ module.exports = {
             typescript: {
                 enabled: true,
                 memoryLimit: 4096,
-                configFile: path.join(PATH.root, 'tsconfig.json'),
+                configFile: '/Users/jryuanentai/work/jtalk/laboratory/fe-jtalk-client-im/tsconfig.json',
             },
             async: true,
             // eslint: {
@@ -65,15 +65,6 @@ module.exports = {
             filename: 'index.html',
             template: path.join(PATH.src, '/public/index.html'),
             inject: true,
-        }),
-        new AddAssetHtmlPlugin({
-            filepath: path.join(PATH.dll, 'vendor.dll.bundle.js'),
-            hash: true,
-            includeSourcemap: false,
-        }),
-        new webpack.DllReferencePlugin({
-            manifest: path.join(PATH.dll, 'manifest.json'),
-            context: PATH.dll,
         }),
     ],
 }

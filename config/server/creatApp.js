@@ -11,25 +11,13 @@ const Router = require('@koa/router');
 const webpackConfig = require('../webpack/webpack.config');
 const { SERVER } = require('../infoConf');
 
+const app = new Koa();
 const router = new Router();
-const compiler = webpack(webpackConfig);
 
 const keyOpts = {
     key: fs.readFileSync(path.resolve(__dirname, './privatekey.pem')),
     cert: fs.readFileSync(path.resolve(__dirname, './certificate.pem')),
 };
-
-const instance = middleware(compiler, {
-    quiet: true,
-    noInfo: true,
-    logger: {
-        info: () => {},
-        error: () => {},
-    },
-    publicPath: webpackConfig.output.publicPath,
-});
-
-const hotCompiler = hotMid(compiler);
 
 function koaDevMiddleware(devMiddleware) {
     return async function newDevMiddleware(ctx, next) {
@@ -55,17 +43,26 @@ function koaHotMiddleware(hotMiddleware) {
         next(await new Promise((resolve) => hotMiddleware(ctx.req, ctx.res, resolve)));
 };
 
-module.exports = (options) => {
-    const { entry, outPath } = options;
+module.exports = (config) => {
+    const compiler = webpack(config, (err) => {
+        app.use(koaDevMiddleware(instance));
+        app.use(koaHotMiddleware(hotCompiler));
+    });
 
-    webpackConfig.entry.index[2] = entry;
-    webpackConfig.output.path = outPath;
+    const instance = middleware(compiler, {
+        quiet: true,
+        noInfo: true,
+        logger: {
+            info: () => {},
+            error: () => {},
+        },
+        publicPath: config.output.publicPath,
+    });
 
-    const app = new Koa();
+    const hotCompiler = hotMid(compiler);
+
 
     app.use(router.routes(), router.allowedMethods());
-    app.use(koaDevMiddleware(instance));
-    app.use(koaHotMiddleware(hotCompiler));
 
     https.createServer(keyOpts, app.callback()).listen(SERVER.https);
     http.createServer(app.callback()).listen(SERVER.http);

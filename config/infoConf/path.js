@@ -1,6 +1,6 @@
 const path = require('path');
 
-const root = path.resolve(__dirname, '../../');
+const root = '/Users/jryuanentai/work/jtalk/laboratory/fe-jtalk-client-im/';
 
 module.exports = {
   root,
