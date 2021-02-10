@@ -1,8 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const webpack = require('webpack');
-const path = require('path');
-const fs = require('fs');
 const TerserPlugin = require("terser-webpack-plugin");
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -17,13 +15,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 // const ESBuildPlugin = require('esbuild-webpack-plugin').default;
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const appPath = fs.realpathSync(process.cwd());
-const resolveAppPath = (resolveName) => path.resolve(appPath, resolveName);
-const appPackage = require(resolveAppPath('package.json'));
-const appIndex = resolveAppPath(appPackage.main);
+const babelrc_1 = require("./babelrc");
+const paths = require("../paths");
 exports.default = ({ env }) => {
     const isDevelopment = env === 'development';
     const isProduction = env === 'production';
+    const babelOpts = babelrc_1.default({ isDevelopment });
     const threadLoaderOpts = {
         workers: isProduction ? osSize : osSize - 1,
         workerParallelJobs: 50,
@@ -47,15 +44,21 @@ exports.default = ({ env }) => {
         entry: isDevelopment ? [
             'react-hot-loader/patch',
             'webpack-hot-middleware/client',
-            appIndex,
-        ] : appIndex,
+            paths.appIndex,
+        ] : paths.appIndex,
         output: {
-            path: isProduction ? resolveAppPath('dist') : undefined,
-            filename: 'static/js/[name].js',
-            chunkFilename: 'static/js/[chunkhas8].bundle.js',
+            path: paths.resolveAppPath('dist'),
+            filename: 'static/js/[name].[contenthash:8].js',
+            chunkFilename: 'static/js/[name].[contenthash:8].bundle.js',
             publicPath: '/',
             assetModuleFilename: isProduction ?
                 'static/media/[hash][ext][query]' : undefined,
+        },
+        cache: {
+            type: 'filesystem',
+            buildDependencies: {
+                config: [__filename],
+            },
         },
         optimization: {
             moduleIds: 'deterministic',
@@ -110,9 +113,9 @@ exports.default = ({ env }) => {
                 ...(isProduction && {
                     'react-dom': '@hot-loader/react-dom',
                 }),
-                'src': resolveAppPath('src')
+                '@': paths.resolveAppPath('src')
             },
-            modules: ['node_modules', resolveAppPath('node_modules')],
+            modules: ['node_modules', paths.resolveAppPath('node_modules')],
         },
         module: {
             strictExportPresence: true,
@@ -129,13 +132,7 @@ exports.default = ({ env }) => {
                                 },
                                 {
                                     loader: 'babel-loader',
-                                    options: Object.assign({
-                                        cacheDirectory: true,
-                                        babelrc: false,
-                                        plugins: [
-                                            isDevelopment && require.resolve('react-refresh/babel')
-                                        ]
-                                    }, path.resolve(__dirname, './babelrc')),
+                                    options: babelOpts,
                                 },
                                 {
                                     loader: 'ts-loader',
@@ -146,20 +143,17 @@ exports.default = ({ env }) => {
                                     },
                                 },
                             ],
-                            include: resolveAppPath('src'),
-                            exclude: resolveAppPath('node_modules'),
+                            include: paths.resolveAppPath('src'),
+                            exclude: paths.resolveAppPath('node_modules'),
                         },
                         {
                             test: [/\.(js|jsx)$/],
                             use: {
                                 loader: 'babel-loader?cacheDirectory=true',
-                                options: Object.assign({
-                                    cacheDirectory: true,
-                                    babelrc: false,
-                                }, path.resolve(__dirname, './babelrc')),
+                                options: babelOpts,
                             },
-                            include: resolveAppPath('src'),
-                            exclude: resolveAppPath('node_modules'),
+                            include: paths.resolveAppPath('src'),
+                            exclude: paths.resolveAppPath('node_modules'),
                         },
                         {
                             test: /\.less$/,
@@ -185,10 +179,10 @@ exports.default = ({ env }) => {
                         },
                         {
                             test: /\.css$/,
-                            use: isProduction ?
-                                [MiniCssExtractPlugin.loader, 'css-loader'] : [{
+                            use: (isProduction ?
+                                [MiniCssExtractPlugin.loader] : [{
                                     loader: 'style-loader',
-                                }],
+                                }]).concat(['css-loader']),
                         },
                         {
                             test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
@@ -210,11 +204,11 @@ exports.default = ({ env }) => {
             new webpack.IgnorePlugin(/\.\/locale/, /moment/),
             isProduction && new webpack.optimize.ModuleConcatenationPlugin(),
             new webpack.DefinePlugin({
-                'process.env.NODE_ENV': isProduction ? 'development' : 'production'
+                'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
             }),
             new HtmlWebpackPlugin({
                 filename: 'index.html',
-                template: resolveAppPath('/public/index.html'),
+                template: paths.resolveAppPath('src/public/index.html'),
                 inject: true,
                 ...(isProduction ? {
                     minify: {
@@ -239,7 +233,7 @@ exports.default = ({ env }) => {
                 typescript: {
                     enabled: true,
                     memoryLimit: 4096,
-                    configFile: resolveAppPath('tsconfig.json'),
+                    configFile: paths.resolveAppPath('tsconfig.json'),
                 },
                 async: true,
             }),
@@ -248,11 +242,11 @@ exports.default = ({ env }) => {
                 skipSuccessful: true,
             }),
             isProduction && new MiniCssExtractPlugin({
-                filename: `static/css/index.[chunkhash:8].css`,
-                chunkFilename: `static/css/[id].[chunkhash:8].css`,
+                filename: `static/css/[name].[contenthash:8].css`,
+                chunkFilename: `static/css/[name].[contenthash:8].css`,
                 ignoreOrder: false,
             }),
-        ],
+        ].filter(item => item),
     };
 };
 //# sourceMappingURL=webpack.config.js.map

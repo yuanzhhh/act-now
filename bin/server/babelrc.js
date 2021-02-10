@@ -1,4 +1,8 @@
-module.exports = ({ isDevelopment }) => ({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ({ isDevelopment }) => ({
+    cacheDirectory: true,
+    babelrc: false,
     presets: [
         [
             '@babel/preset-env', {
@@ -29,5 +33,7 @@ module.exports = ({ isDevelopment }) => ({
                 corejs: false,
             },
         ],
-    ],
+        isDevelopment && require.resolve('react-refresh/babel')
+    ].filter(item => item),
 });
+//# sourceMappingURL=babelrc.js.map

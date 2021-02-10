@@ -4,11 +4,15 @@ const Koa = require('koa');
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
-// const path = require('path');
 const hotMid = require("webpack-hot-middleware");
 const Router = require('@koa/router');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+const c2k = require('koa-connect');
 
 import webpackConfig from './webpack.config';
+import * as paths from '../paths';
+
+const proxys = require(paths.resolveAppPath('proxys'));
 
 const keyOpts = {
   key: fs.readFileSync('/Users/jryuanentai/work/jtalk/laboratory/act-now/src/server/privatekey.pem'),
@@ -41,30 +45,36 @@ function koaHotMiddleware(hotMiddleware: any) {
 
 interface ServerOptions {
   env: 'development' | 'production'
-}
+};
 
 export default ({ env }: ServerOptions) => {
   const app = new Koa();
   const router = new Router();
 
   const config = webpackConfig({ env });
+  const compiler = webpack(config);
 
-  webpack(config, (compiler: any) => {
-    const hotCompiler = hotMid(compiler);
-    const instance = middleware(compiler, {
-      quiet: true,
-      noInfo: true,
-      logger: { info: () => {} },
-      publicPath: config.output.publicPath,
-    });
-
-    app.use(koaDevMiddleware(instance));
-    app.use(koaHotMiddleware(hotCompiler));
+  const hotCompiler = hotMid(compiler);
+  const instance = middleware(compiler, {
+    quiet: true,
+    noInfo: true,
+    logger: {
+      info: () => {},
+      error: (err: any) => console.log(err),
+    },
+    publicPath: config.output.publicPath,
   });
 
+  for (let key in proxys.proxys) {
+    const middleware = createProxyMiddleware(key, Object.assign(proxys.proxys[key], {}));
+
+    app.use(c2k(middleware));
+  }
+
   app.use(router.routes(), router.allowedMethods());
+  app.use(koaDevMiddleware(instance));
+  app.use(koaHotMiddleware(hotCompiler));
 
   https.createServer(keyOpts, app.callback()).listen(8002);
   http.createServer(app.callback()).listen(8001);
 }
-

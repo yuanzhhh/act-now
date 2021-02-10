@@ -12,6 +12,12 @@ declare const _default: ({ env }: ConfigOptions) => {
         publicPath: string;
         assetModuleFilename: string | undefined;
     };
+    cache: {
+        type: string;
+        buildDependencies: {
+            config: string[];
+        };
+    };
     optimization: {
         moduleIds: string;
         splitChunks: {
@@ -39,7 +45,7 @@ declare const _default: ({ env }: ConfigOptions) => {
     resolve: {
         extensions: string[];
         alias: {
-            src: any;
+            '@': any;
             'react-dom'?: string;
         };
         modules: any[];
@@ -49,10 +55,49 @@ declare const _default: ({ env }: ConfigOptions) => {
         rules: {
             oneOf: ({
                 test: RegExp[];
-                use: {
+                use: ({
                     loader: string;
-                    options: any;
-                }[];
+                    options: {
+                        workers: any;
+                        workerParallelJobs: number;
+                        workerNodeArgs: string[];
+                        poolRespawn: boolean;
+                        poolTimeout: number;
+                        poolParallelJobs: number;
+                        name: string;
+                    };
+                } | {
+                    loader: string;
+                    options: {
+                        cacheDirectory: boolean;
+                        babelrc: boolean;
+                        presets: ((string | {
+                            targets: {
+                                browsers: string[];
+                            };
+                            modules: boolean;
+                        })[] | (string | {
+                            runtime: string;
+                            development: boolean;
+                            importSource: string;
+                        })[])[];
+                        plugins: (string | false | (string | {
+                            legacy: boolean;
+                        })[] | (string | {
+                            libraryName: string;
+                            style: string;
+                        })[] | (string | {
+                            corejs: boolean;
+                        })[])[];
+                    };
+                } | {
+                    loader: string;
+                    options: {
+                        transpileOnly: boolean;
+                        happyPackMode: boolean;
+                        ignoreDiagnostics: never[];
+                    };
+                })[];
                 include: any;
                 exclude: any;
                 type?: undefined;
@@ -60,7 +105,28 @@ declare const _default: ({ env }: ConfigOptions) => {
                 test: RegExp[];
                 use: {
                     loader: string;
-                    options: any;
+                    options: {
+                        cacheDirectory: boolean;
+                        babelrc: boolean;
+                        presets: ((string | {
+                            targets: {
+                                browsers: string[];
+                            };
+                            modules: boolean;
+                        })[] | (string | {
+                            runtime: string;
+                            development: boolean;
+                            importSource: string;
+                        })[])[];
+                        plugins: (string | false | (string | {
+                            legacy: boolean;
+                        })[] | (string | {
+                            libraryName: string;
+                            style: string;
+                        })[] | (string | {
+                            corejs: boolean;
+                        })[])[];
+                    };
                 };
                 include: any;
                 exclude: any;

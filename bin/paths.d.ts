@@ -1,6 +1,4 @@
+export declare const appPath: any;
 export declare const resolveAppPath: (resolveName: string) => any;
-declare const _default: {
-    appPackage: any;
-    appIndex: any;
-};
-export default _default;
+export declare const appPackage: any;
+export declare const appIndex: any;

@@ -6,10 +6,13 @@ const Koa = require('koa');
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
-// const path = require('path');
 const hotMid = require("webpack-hot-middleware");
 const Router = require('@koa/router');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+const c2k = require('koa-connect');
 const webpack_config_1 = require("./webpack.config");
+const paths = require("../paths");
+const proxys = require(paths.resolveAppPath('proxys'));
 const keyOpts = {
     key: fs.readFileSync('/Users/jryuanentai/work/jtalk/laboratory/act-now/src/server/privatekey.pem'),
     cert: fs.readFileSync('/Users/jryuanentai/work/jtalk/laboratory/act-now/src/server/certificate.pem'),
@@ -35,22 +38,29 @@ function koaHotMiddleware(hotMiddleware) {
     return async (ctx, next) => next(await new Promise((resolve) => hotMiddleware(ctx.req, ctx.res, resolve)));
 }
 ;
+;
 exports.default = ({ env }) => {
     const app = new Koa();
     const router = new Router();
     const config = webpack_config_1.default({ env });
-    webpack(config, (compiler) => {
-        const hotCompiler = hotMid(compiler);
-        const instance = middleware(compiler, {
-            quiet: true,
-            noInfo: true,
-            logger: { info: () => { } },
-            publicPath: config.output.publicPath,
-        });
-        app.use(koaDevMiddleware(instance));
-        app.use(koaHotMiddleware(hotCompiler));
+    const compiler = webpack(config);
+    const hotCompiler = hotMid(compiler);
+    const instance = middleware(compiler, {
+        quiet: true,
+        noInfo: true,
+        logger: {
+            info: () => { },
+            error: (err) => console.log(err),
+        },
+        publicPath: config.output.publicPath,
     });
+    for (let key in proxys.proxys) {
+        const middleware = createProxyMiddleware(key, Object.assign(proxys.proxys[key], {}));
+        app.use(c2k(middleware));
+    }
     app.use(router.routes(), router.allowedMethods());
+    app.use(koaDevMiddleware(instance));
+    app.use(koaHotMiddleware(hotCompiler));
     https.createServer(keyOpts, app.callback()).listen(8002);
     http.createServer(app.callback()).listen(8001);
 };
