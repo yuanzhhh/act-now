@@ -27,6 +27,7 @@ export default ({ env, entryPath }: ConfigOptions) => {
   const isProduction = env === 'production';
 
   const babelOpts = babelrc({ isDevelopment });
+  const entryIndex = entryPath ? paths.resolveAppPath(entryPath) : paths.appIndex;
 
   const threadLoaderOpts = {
     workers: isProduction ? osSize : osSize - 1,
@@ -46,8 +47,6 @@ export default ({ env, entryPath }: ConfigOptions) => {
     'style-loader',
     'postcss-loader',
   ]);
-
-  const entryIndex = entryPath ? paths.resolveAppPath(entryPath) : paths.appIndex;
 
   return {
     mode: isProduction ? 'production' : 'development',
