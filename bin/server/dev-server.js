@@ -39,10 +39,10 @@ function koaHotMiddleware(hotMiddleware) {
 }
 ;
 ;
-exports.default = ({ env }) => {
+exports.default = ({ env, entryPath }) => {
     const app = new Koa();
     const router = new Router();
-    const config = webpack_config_1.default({ env });
+    const config = webpack_config_1.default({ env, entryPath });
     const compiler = webpack(config);
     const hotCompiler = hotMid(compiler);
     const instance = middleware(compiler, {

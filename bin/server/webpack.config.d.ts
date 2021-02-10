@@ -1,7 +1,8 @@
 interface ConfigOptions {
     env: 'development' | 'production';
+    entryPath: string | undefined;
 }
-declare const _default: ({ env }: ConfigOptions) => {
+declare const _default: ({ env, entryPath }: ConfigOptions) => {
     mode: string;
     devtool: string;
     entry: any;

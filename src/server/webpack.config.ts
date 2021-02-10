@@ -18,10 +18,11 @@ import babelrc from './babelrc';
 import * as paths from '../paths';
 
 interface ConfigOptions {
-  env: 'development' | 'production'
+  env: 'development' | 'production';
+  entryPath: string | undefined;
 }
 
-export default ({ env }: ConfigOptions) => {
+export default ({ env, entryPath }: ConfigOptions) => {
   const isDevelopment = env === 'development';
   const isProduction = env === 'production';
 
@@ -46,14 +47,16 @@ export default ({ env }: ConfigOptions) => {
     'postcss-loader',
   ]);
 
+  const entryIndex = entryPath ? paths.resolveAppPath(entryPath) : paths.appIndex;
+
   return {
     mode: isProduction ? 'production' : 'development',
     devtool: 'cheap-module-source-map',
     entry: isDevelopment ? [
       'react-hot-loader/patch',
       'webpack-hot-middleware/client',
-      paths.appIndex,
-    ] : paths.appIndex,
+      entryIndex,
+    ] : entryIndex,
     output: {
       path: paths.resolveAppPath('dist'),
       filename: 'static/js/[name].[contenthash:8].js',

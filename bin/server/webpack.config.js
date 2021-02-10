@@ -17,7 +17,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const babelrc_1 = require("./babelrc");
 const paths = require("../paths");
-exports.default = ({ env }) => {
+exports.default = ({ env, entryPath }) => {
     const isDevelopment = env === 'development';
     const isProduction = env === 'production';
     const babelOpts = babelrc_1.default({ isDevelopment });
@@ -38,14 +38,15 @@ exports.default = ({ env }) => {
         'style-loader',
         'postcss-loader',
     ]);
+    const entryIndex = entryPath ? paths.resolveAppPath(entryPath) : paths.appIndex;
     return {
         mode: isProduction ? 'production' : 'development',
         devtool: 'cheap-module-source-map',
         entry: isDevelopment ? [
             'react-hot-loader/patch',
             'webpack-hot-middleware/client',
-            paths.appIndex,
-        ] : paths.appIndex,
+            entryIndex,
+        ] : entryIndex,
         output: {
             path: paths.resolveAppPath('dist'),
             filename: 'static/js/[name].[contenthash:8].js',

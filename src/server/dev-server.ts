@@ -44,14 +44,15 @@ function koaHotMiddleware(hotMiddleware: any) {
 };
 
 interface ServerOptions {
-  env: 'development' | 'production'
+  env: 'development' | 'production';
+  entryPath: string | undefined
 };
 
-export default ({ env }: ServerOptions) => {
+export default ({ env, entryPath }: ServerOptions) => {
   const app = new Koa();
   const router = new Router();
 
-  const config = webpackConfig({ env });
+  const config = webpackConfig({ env, entryPath });
   const compiler = webpack(config);
 
   const hotCompiler = hotMid(compiler);
