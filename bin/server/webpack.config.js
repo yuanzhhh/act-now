@@ -21,6 +21,7 @@ exports.default = ({ env, entryPath }) => {
     const isDevelopment = env === 'development';
     const isProduction = env === 'production';
     const babelOpts = babelrc_1.default({ isDevelopment });
+    const entryIndex = entryPath ? paths.resolveAppPath(entryPath) : paths.appIndex;
     const threadLoaderOpts = {
         workers: isProduction ? osSize : osSize - 1,
         workerParallelJobs: 50,
@@ -38,7 +39,6 @@ exports.default = ({ env, entryPath }) => {
         'style-loader',
         'postcss-loader',
     ]);
-    const entryIndex = entryPath ? paths.resolveAppPath(entryPath) : paths.appIndex;
     return {
         mode: isProduction ? 'production' : 'development',
         devtool: 'cheap-module-source-map',
