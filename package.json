@@ -5,7 +5,8 @@
     "scripts": {
         "dev": "tsc --watch",
         "clean": "rimraf ./bin",
-        "build": "npm run clean && tsc"
+        "build": "npm run clean && tsc",
+        "np": "npm run build && np"
     },
     "bin": {
         "act-now": "./bin/index.js"

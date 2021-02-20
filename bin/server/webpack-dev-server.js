@@ -12,7 +12,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const c2k = require('koa-connect');
 const webpack_config_1 = require("./webpack.config");
 const paths = require("../paths");
-const proxys = require(paths.resolveAppPath('proxys'));
+const actconfig = require(paths.resolveAppPath('.act-now'));
 const keyOpts = {
     key: fs.readFileSync('/Users/jryuanentai/work/jtalk/laboratory/act-now/src/server/privatekey.pem'),
     cert: fs.readFileSync('/Users/jryuanentai/work/jtalk/laboratory/act-now/src/server/certificate.pem'),
@@ -54,8 +54,8 @@ exports.default = ({ env, entryPath }) => {
         },
         publicPath: config.output.publicPath,
     });
-    for (let key in proxys.proxys) {
-        const middleware = createProxyMiddleware(key, Object.assign(proxys.proxys[key], {}));
+    for (let key in actconfig.proxys) {
+        const middleware = createProxyMiddleware(key, Object.assign(actconfig.proxys[key], {}));
         app.use(c2k(middleware));
     }
     app.use(router.routes(), router.allowedMethods());
