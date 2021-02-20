@@ -1,4 +1,4 @@
 import { UnknownFun } from 'onions';
 import { Command } from 'commander';
-declare const start: (next: UnknownFun) => (program: Command) => void;
-export default start;
+declare const _default: (next: UnknownFun) => (program: Command) => void;
+export default _default;
