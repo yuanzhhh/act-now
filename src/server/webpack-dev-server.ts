@@ -8,15 +8,14 @@ const hotMid = require("webpack-hot-middleware");
 const Router = require('@koa/router');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const c2k = require('koa-connect');
+const path = require('path');
 
 import webpackConfig from './webpack.config';
 import * as paths from '../paths';
 
-const actconfig = require(paths.resolveAppPath('.act-now'));
-
 const keyOpts = {
-  key: fs.readFileSync('/Users/jryuanentai/work/jtalk/laboratory/act-now/src/server/privatekey.pem'),
-  cert: fs.readFileSync('/Users/jryuanentai/work/jtalk/laboratory/act-now/src/server/certificate.pem'),
+  key: fs.readFileSync(path.resolve(__dirname, '../../src/server/privatekey.pem')),
+  cert: fs.readFileSync(path.resolve(__dirname, '../../src/server/certificate.pem')),
 };
 
 function koaDevMiddleware(devMiddleware: any) {
@@ -48,7 +47,7 @@ interface ServerOptions {
   entryPath: string | undefined
 };
 
-export default ({ env, entryPath }: ServerOptions) => {
+export default async ({ env, entryPath }: ServerOptions) => {
   const app = new Koa();
   const router = new Router();
 
@@ -66,11 +65,21 @@ export default ({ env, entryPath }: ServerOptions) => {
     publicPath: config.output.publicPath,
   });
 
-  for (let key in actconfig.proxys) {
-    const middleware = createProxyMiddleware(key, Object.assign(actconfig.proxys[key], {}));
+  await new Promise(resolve => {
+    fs.access(paths.resolveAppPath('.act-now.js'), (err: unknown) => {
+      if (!err) {
+        const actconfig = require(paths.resolveAppPath('.act-now'));
 
-    app.use(c2k(middleware));
-  }
+        for (let key in actconfig.proxys) {
+          const middleware = createProxyMiddleware(key, Object.assign(actconfig.proxys[key], {}));
+
+          app.use(c2k(middleware));
+        }
+      }
+
+      resolve(err);
+    });
+  });
 
   app.use(router.routes(), router.allowedMethods());
   app.use(koaDevMiddleware(instance));

@@ -10,12 +10,12 @@ const hotMid = require("webpack-hot-middleware");
 const Router = require('@koa/router');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const c2k = require('koa-connect');
+const path = require('path');
 const webpack_config_1 = require("./webpack.config");
 const paths = require("../paths");
-const actconfig = require(paths.resolveAppPath('.act-now'));
 const keyOpts = {
-    key: fs.readFileSync('/Users/jryuanentai/work/jtalk/laboratory/act-now/src/server/privatekey.pem'),
-    cert: fs.readFileSync('/Users/jryuanentai/work/jtalk/laboratory/act-now/src/server/certificate.pem'),
+    key: fs.readFileSync(path.resolve(__dirname, '../../src/server/privatekey.pem')),
+    cert: fs.readFileSync(path.resolve(__dirname, '../../src/server/certificate.pem')),
 };
 function koaDevMiddleware(devMiddleware) {
     return async function newDevMiddleware(ctx, next) {
@@ -39,7 +39,7 @@ function koaHotMiddleware(hotMiddleware) {
 }
 ;
 ;
-exports.default = ({ env, entryPath }) => {
+exports.default = async ({ env, entryPath }) => {
     const app = new Koa();
     const router = new Router();
     const config = webpack_config_1.default({ env, entryPath });
@@ -54,10 +54,18 @@ exports.default = ({ env, entryPath }) => {
         },
         publicPath: config.output.publicPath,
     });
-    for (let key in actconfig.proxys) {
-        const middleware = createProxyMiddleware(key, Object.assign(actconfig.proxys[key], {}));
-        app.use(c2k(middleware));
-    }
+    await new Promise(resolve => {
+        fs.access(paths.resolveAppPath('.act-now.js'), (err) => {
+            if (!err) {
+                const actconfig = require(paths.resolveAppPath('.act-now'));
+                for (let key in actconfig.proxys) {
+                    const middleware = createProxyMiddleware(key, Object.assign(actconfig.proxys[key], {}));
+                    app.use(c2k(middleware));
+                }
+            }
+            resolve(err);
+        });
+    });
     app.use(router.routes(), router.allowedMethods());
     app.use(koaDevMiddleware(instance));
     app.use(koaHotMiddleware(hotCompiler));
