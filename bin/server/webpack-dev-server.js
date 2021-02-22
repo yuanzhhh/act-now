@@ -50,6 +50,7 @@ exports.default = async ({ env, entryPath }) => {
         noInfo: true,
         logger: {
             info: () => { },
+            warn: (warn) => console.log(warn),
             error: (err) => console.log(err),
         },
         publicPath: config.output.publicPath,

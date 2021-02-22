@@ -1,17 +1,40 @@
 import { UnknownFun } from 'onions';
 import { Command } from 'commander';
+const webpack = require('webpack');
+const chalk = require('chalk');
 
-import devServer from '../server/webpack-dev-server';
+import webpackConfig from '../server/webpack.config';
+
+const build = (entryPath?: string) => {
+  process.env.NODE_ENV = 'production';
+  const log = console.log;
+  const env = process.env.NODE_ENV as 'production';
+
+  const config = webpackConfig({ env, entryPath });
+  const compiler = webpack(config);
+
+  new Promise((resolve, reject) => {
+    compiler.run((err: unknown, stats: unknown) => {
+      if (err) return reject(err);
+
+      return resolve(stats);
+    });
+  }).then(() => {
+    log(chalk.bold.green('Compiler success!'));
+
+    process.exit();
+  }, () => {
+    log(chalk.bold.bgRed('Unreliable results because compiler errors!'));
+
+    process.exit(1);
+  });
+};
 
 export default (next: UnknownFun) => (program: Command) => {
   program
     .command('build [project]')
     .description('Production mode - Build project; 生产文件输出')
-    .action((entryPath?: string) =>
-      devServer({
-        entryPath,
-        env: 'production',
-      }));
+    .action(build);
 
   next(program);
 };

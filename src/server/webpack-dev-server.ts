@@ -60,7 +60,8 @@ export default async ({ env, entryPath }: ServerOptions) => {
     noInfo: true,
     logger: {
       info: () => {},
-      error: (err: any) => console.log(err),
+      warn: (warn: string) => console.log(warn),
+      error: (err: string) => console.log(err),
     },
     publicPath: config.output.publicPath,
   });

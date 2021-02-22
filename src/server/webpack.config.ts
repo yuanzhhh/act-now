@@ -126,7 +126,7 @@ export default ({ env, entryPath }: ConfigOptions) => {
         }),
         '@': paths.resolveAppPath('src')
       },
-      modules: [paths.resolveAppPath('src'), 'node_modules', paths.resolveAppPath('node_modules')],
+      modules: [paths.resolveAppPath('src'), paths.resolveAppPath('node_modules'), 'node_modules'],
     },
     module: {
       strictExportPresence: true,
@@ -212,11 +212,16 @@ export default ({ env, entryPath }: ConfigOptions) => {
       ],
     },
     plugins: [
-      new ProgressBarPlugin(),
-      new NyanProgressPlugin(),
+      isDevelopment && new ProgressBarPlugin(),
+      isDevelopment && new NyanProgressPlugin(),
+      isProduction && new webpack.ProgressPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new CleanWebpackPlugin(),
       new webpack.IgnorePlugin(/\.\/locale/, /moment/),
+      /**
+         Recognizes certain classes of webpack errors and cleans, aggregates and prioritizes them to provide a better Developer Experience.
+       */
+      new FriendlyErrorsWebpackPlugin(),
       isProduction && new webpack.optimize.ModuleConcatenationPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
@@ -244,7 +249,6 @@ export default ({ env, entryPath }: ConfigOptions) => {
       }),
       isDevelopment && new ReactRefreshWebpackPlugin(),
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
-      isDevelopment && new FriendlyErrorsWebpackPlugin(),
       isDevelopment && new CaseSensitivePathsPlugin(),
       isDevelopment && new ForkTsCheckerWebpackPlugin({
         typescript: {
