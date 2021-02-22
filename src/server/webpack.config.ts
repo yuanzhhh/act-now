@@ -126,7 +126,7 @@ export default ({ env, entryPath }: ConfigOptions) => {
         }),
         '@': paths.resolveAppPath('src')
       },
-      modules: ['node_modules', paths.resolveAppPath('node_modules')],
+      modules: [paths.resolveAppPath('src'), paths.resolveAppPath('node_modules')],
     },
     module: {
       strictExportPresence: true,
