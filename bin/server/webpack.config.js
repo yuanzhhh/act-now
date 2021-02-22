@@ -15,6 +15,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 // const ESBuildPlugin = require('esbuild-webpack-plugin').default;
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const babelrc_1 = require("./babelrc");
 const paths = require("../paths");
 exports.default = ({ env, entryPath }) => {
@@ -198,8 +199,8 @@ exports.default = ({ env, entryPath }) => {
             ],
         },
         plugins: [
+            new ProgressBarPlugin(),
             new NyanProgressPlugin(),
-            new webpack.ProgressPlugin(),
             new webpack.NoEmitOnErrorsPlugin(),
             new CleanWebpackPlugin(),
             new webpack.IgnorePlugin(/\.\/locale/, /moment/),

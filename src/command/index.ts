@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 
-import start from './start';
+import dev from './dev';
+import build from './build';
 import { MiddlewareFun } from 'onions';
 
 export const register = (program: Command) => {
@@ -8,5 +9,6 @@ export const register = (program: Command) => {
 };
 
 export default [
-  start,
+  dev,
+  build,
 ] as MiddlewareFun[];

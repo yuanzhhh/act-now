@@ -1,3 +1,22 @@
-import start from './start';
+import { UnknownFun } from 'onions';
+import { Command } from 'commander';
 
-export default start;
+import devServer from '../server/webpack-dev-server';
+
+export default (next: UnknownFun) => (program: Command) => {
+  const dev = (entryPath?: string) => {
+    process.env.NODE_ENV = 'development';
+
+    devServer({
+      entryPath,
+      env: 'development',
+    });
+  };
+
+  program
+    .command('dev [project]')
+    .description('Development mode - Develop project; 开发模式-启动项目')
+    .action(dev);
+
+  next(program);
+};

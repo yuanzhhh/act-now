@@ -5,12 +5,12 @@ import devServer from '../server/webpack-dev-server';
 
 export default (next: UnknownFun) => (program: Command) => {
   program
-    .command('start [project]')
-    .description('Development Mode - Start project; 开发模式-启动项目')
+    .command('build [project]')
+    .description('Production mode - Build project; 生产文件输出')
     .action((entryPath?: string) =>
       devServer({
         entryPath,
-        env: 'development',
+        env: 'production',
       }));
 
   next(program);
