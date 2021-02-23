@@ -58,6 +58,8 @@ module.exports = {
         // Default 'px', No conversion
         "px-to": 'px',
     },
+    // Development mode auto open default browser
+    browserOpen: true,
     proxy: {
     // "/jtalk/message/**": {
     //     target: `${protocol}://${portalWebUrl}:${portalWebPort}`,

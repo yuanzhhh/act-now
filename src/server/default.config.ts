@@ -51,55 +51,57 @@
 // }[RUN_TIME];
 
 module.exports = {
+  /**
+   * 'Environment' is app build apply environment
+   */
+  environment: {
+    // px-to 'vw' or 'rem' or 'px'
+    // Default 'px', No conversion
+    "px-to": 'px',
+  },
+  // Development mode auto open default browser
+  browserOpen: true,
+  proxy: {
+    // "/jtalk/message/**": {
+    //     target: `${protocol}://${portalWebUrl}:${portalWebPort}`,
+    //     changeOrigin: true,
+    //     cookieDomainRewrite: {
+    //         "*": "",
+    //     },
+    //     secure: false,
+    // },
+    // "/jtalk/service/**": {
+    //     target: `${protocol}://${serviceWebUrl}:${serviceWebPort}`,
+    //     changeOrigin: true,
+    //     cookieDomainRewrite: {
+    //         "*": "",
+    //     },
+    //     secure: false,
+    // },
+    // "/im/**": {
+    //     target: `${protocol}://${serviceWebUrl}:${serviceWebPort}`,
+    //     changeOrigin: true,
+    //     cookieDomainRewrite: {
+    //         "*": "",
+    //     },
+    //     secure: false,
+    // },
+    // "/jtalk/**": {
+    //     target: `${protocol}://${portalWebUrl}:${portalWebPort}`,
+    //     changeOrigin: true,
+    //     cookieDomainRewrite: {
+    //         "*": "",
+    //     },
+    //     secure: false,
+    // },
+  },
+  protocol: {
+    "http-port": 8001,
+    "https-port": 8002,
+  },
+  env: {
     /**
-     * 'Environment' is app build apply environment
-     */
-    environment: {
-        // px-to 'vw' or 'rem' or 'px'
-        // Default 'px', No conversion
-        "px-to": 'px',
-    },
-    proxy: {
-        // "/jtalk/message/**": {
-        //     target: `${protocol}://${portalWebUrl}:${portalWebPort}`,
-        //     changeOrigin: true,
-        //     cookieDomainRewrite: {
-        //         "*": "",
-        //     },
-        //     secure: false,
-        // },
-        // "/jtalk/service/**": {
-        //     target: `${protocol}://${serviceWebUrl}:${serviceWebPort}`,
-        //     changeOrigin: true,
-        //     cookieDomainRewrite: {
-        //         "*": "",
-        //     },
-        //     secure: false,
-        // },
-        // "/im/**": {
-        //     target: `${protocol}://${serviceWebUrl}:${serviceWebPort}`,
-        //     changeOrigin: true,
-        //     cookieDomainRewrite: {
-        //         "*": "",
-        //     },
-        //     secure: false,
-        // },
-        // "/jtalk/**": {
-        //     target: `${protocol}://${portalWebUrl}:${portalWebPort}`,
-        //     changeOrigin: true,
-        //     cookieDomainRewrite: {
-        //         "*": "",
-        //     },
-        //     secure: false,
-        // },
-    },
-    protocol: {
-        "http-port": 8001,
-        "https-port": 8002,
-    },
-    env: {
-        /**
 
-         */
-    },
+     */
+  },
 }

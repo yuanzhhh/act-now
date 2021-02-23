@@ -4,10 +4,10 @@ import { Command } from 'commander';
 import devServer from '../server/webpack-dev-server';
 
 export default (next: UnknownFun) => (program: Command) => {
-  const dev = (entryPath?: string) => {
+  const dev = async (entryPath?: string) => {
     process.env.NODE_ENV = 'development';
 
-    devServer({
+    await devServer({
       entryPath,
       env: 'development',
     });

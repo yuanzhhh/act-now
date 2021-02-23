@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const webpack_dev_server_1 = require("../server/webpack-dev-server");
 exports.default = (next) => (program) => {
-    const dev = (entryPath) => {
+    const dev = async (entryPath) => {
         process.env.NODE_ENV = 'development';
-        webpack_dev_server_1.default({
+        await webpack_dev_server_1.default({
             entryPath,
             env: 'development',
         });

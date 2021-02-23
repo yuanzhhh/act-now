@@ -8,6 +8,7 @@ const hotMid = require("webpack-hot-middleware");
 const Router = require('@koa/router');
 const c2k = require('koa-connect');
 const path = require('path');
+const open = require('open');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 import webpackConfig from './webpack.config';
@@ -54,10 +55,12 @@ export default async ({ env, entryPath }: ServerOptions) => {
     quiet: true,
     noInfo: true,
     logger: {
-      info: () => {
+      info: async () => {
         /**
-         * Webpack compiler log
+         * Webpack compiler done Callback, and log out
          */
+        if (actConfig.browserOpen)
+          await open(`https://localhost:${actConfig.protocol['https-port']}`);
       },
       warn: (warn: string) => console.log(warn),
       error: (err: string) => console.log(err),
@@ -66,7 +69,7 @@ export default async ({ env, entryPath }: ServerOptions) => {
   });
 
   for (let key in actConfig.proxys)
-    app.use(c2k(createProxyMiddleware(key, Object.assign(actConfig.proxys[key], {}))));
+    app.use(c2k(createProxyMiddleware(key, { ...actConfig.proxys[key] })));
 
   app.use(router.routes(), router.allowedMethods());
   app.use(koaDevMiddleware(instance));
