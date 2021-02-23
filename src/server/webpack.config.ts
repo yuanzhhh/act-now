@@ -1,3 +1,4 @@
+const path = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require("terser-webpack-plugin");
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
@@ -38,7 +39,7 @@ export default async ({ env, entryPath, actConfig }: ConfigOptions) => {
 
   const babelOpts = babelrc({ isDevelopment });
   const entryIndex = entryPath ? paths.resolveAppPath(entryPath) : paths.appIndex;
-  const isHasHtml = await paths.isFileExists(htmlurl);
+  const [isHasHtml, isHasTsconfig] = await Promise.all([paths.isFileExists(htmlurl), paths.isFileExists('tsconfig.json')]);
 
   const threadLoaderOpts = {
     workers: isProduction ? osSize : osSize - 1,
@@ -266,12 +267,15 @@ export default async ({ env, entryPath, actConfig }: ConfigOptions) => {
       }),
       isDevelopment && new ReactRefreshWebpackPlugin(),
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
+      /**
+         Enforces case sensitive paths in Webpack requires.
+       */
       isDevelopment && new CaseSensitivePathsPlugin(),
       isDevelopment && new ForkTsCheckerWebpackPlugin({
         typescript: {
           enabled: true,
           memoryLimit: 4096,
-          configFile: paths.resolveAppPath('tsconfig.json'),
+          configFile: isHasTsconfig ? paths.resolveAppPath('tsconfig.json') : path.resolve(__dirname, '../../tsconfig.json'),
         },
         async: true,
       }),
