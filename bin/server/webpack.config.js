@@ -175,7 +175,26 @@ exports.default = async ({ env, entryPath, actConfig }) => {
                                         postcssOptions: {
                                             plugins: [
                                                 'postcss-flexbugs-fixes',
-                                            ],
+                                                actConfig.environment['px-to'] === 'vw' &&
+                                                    ['postcss-px-to-viewport', {
+                                                            viewportWidth: 750,
+                                                            viewportHeight: 1334,
+                                                            unitPrecision: 5,
+                                                            viewportUnit: 'vw',
+                                                            selectorBlackList: ['window'],
+                                                            minPixelValue: 1,
+                                                            mediaQuery: false,
+                                                            fontViewportUnit: 'vw',
+                                                        }],
+                                                actConfig.environment['px-to'] === 'rem' &&
+                                                    ['postcss-pxtorem', {
+                                                            rootValue: 192,
+                                                            propList: ["*"],
+                                                            replace: true,
+                                                            minPixelValue: 1,
+                                                            unitPrecision: 5,
+                                                        }],
+                                            ].filter(item => item),
                                         }
                                     },
                                 }, {
@@ -210,7 +229,7 @@ exports.default = async ({ env, entryPath, actConfig }) => {
             new webpack.IgnorePlugin(/\.\/locale/, /moment/),
             /**
                Recognizes certain classes of webpack errors and cleans, aggregates and prioritizes them to provide a better Developer Experience.
-             */
+            */
             new FriendlyErrorsWebpackPlugin(),
             isProduction && new webpack.optimize.ModuleConcatenationPlugin(),
             new webpack.DefinePlugin({
@@ -245,7 +264,7 @@ exports.default = async ({ env, entryPath, actConfig }) => {
             isDevelopment && new webpack.HotModuleReplacementPlugin(),
             /**
                Enforces case sensitive paths in Webpack requires.
-             */
+            */
             isDevelopment && new CaseSensitivePathsPlugin(),
             isDevelopment && new ForkTsCheckerWebpackPlugin({
                 typescript: {

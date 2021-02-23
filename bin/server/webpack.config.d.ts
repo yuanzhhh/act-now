@@ -7,6 +7,7 @@ interface ConfigOptions {
     actConfig: {
         proxys: CommonType;
         env: CommonType;
+        environment: CommonType;
     };
 }
 declare const _default: ({ env, entryPath, actConfig }: ConfigOptions) => Promise<{

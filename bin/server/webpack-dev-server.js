@@ -8,36 +8,25 @@ const https = require('https');
 const fs = require('fs');
 const hotMid = require("webpack-hot-middleware");
 const Router = require('@koa/router');
-const { createProxyMiddleware } = require('http-proxy-middleware');
 const c2k = require('koa-connect');
 const path = require('path');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const webpack_config_1 = require("./webpack.config");
 const paths = require("../paths");
 const keyOpts = {
     key: fs.readFileSync(path.resolve(__dirname, '../../src/server/privatekey.pem')),
     cert: fs.readFileSync(path.resolve(__dirname, '../../src/server/certificate.pem')),
 };
-function koaDevMiddleware(devMiddleware) {
-    return async function newDevMiddleware(ctx, next) {
-        const err = await new Promise((resolve) => {
-            devMiddleware(ctx.req, {
-                end: (content) => {
-                    ctx.body = content;
-                    resolve(false);
-                },
-                setHeader: (name, value) => ctx.set(name, value),
-            }, () => resolve(true));
-        });
-        if (err)
-            return next();
-        return null;
-    };
-}
-;
-function koaHotMiddleware(hotMiddleware) {
-    return async (ctx, next) => next(await new Promise((resolve) => hotMiddleware(ctx.req, ctx.res, resolve)));
-}
-;
+const koaDevMiddleware = (devMiddleware) => async (ctx, next) => await new Promise((resolve) => {
+    devMiddleware(ctx.req, {
+        end: (content) => {
+            ctx.body = content;
+            resolve(false);
+        },
+        setHeader: (name, value) => ctx.set(name, value),
+    }, () => resolve(true));
+}) ? next() : null;
+const koaHotMiddleware = (hotMiddleware) => async (ctx, next) => next(await new Promise((resolve) => hotMiddleware(ctx.req, ctx.res, resolve)));
 ;
 exports.default = async ({ env, entryPath }) => {
     const app = new Koa();
@@ -50,21 +39,22 @@ exports.default = async ({ env, entryPath }) => {
         quiet: true,
         noInfo: true,
         logger: {
-            info: () => { },
+            info: () => {
+                /**
+                 * Webpack compiler log
+                 */
+            },
             warn: (warn) => console.log(warn),
             error: (err) => console.log(err),
         },
         publicPath: config.output.publicPath,
     });
-    if (actConfig)
-        for (let key in actConfig.proxys) {
-            const middleware = createProxyMiddleware(key, Object.assign(actConfig.proxys[key], {}));
-            app.use(c2k(middleware));
-        }
+    for (let key in actConfig.proxys)
+        app.use(c2k(createProxyMiddleware(key, Object.assign(actConfig.proxys[key], {}))));
     app.use(router.routes(), router.allowedMethods());
     app.use(koaDevMiddleware(instance));
     app.use(koaHotMiddleware(hotCompiler));
-    https.createServer(keyOpts, app.callback()).listen(8002);
-    http.createServer(app.callback()).listen(8001);
+    https.createServer(keyOpts, app.callback()).listen(actConfig.protocol['https-port']);
+    http.createServer(app.callback()).listen(actConfig.protocol['http-port']);
 };
 //# sourceMappingURL=webpack-dev-server.js.map
