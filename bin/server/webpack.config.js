@@ -18,11 +18,13 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const babelrc_1 = require("./babelrc");
 const paths = require("../paths");
-exports.default = ({ env, entryPath }) => {
+exports.default = async ({ env, entryPath }) => {
     const isDevelopment = env === 'development';
     const isProduction = env === 'production';
+    const htmlurl = 'public/index.html';
     const babelOpts = babelrc_1.default({ isDevelopment });
     const entryIndex = entryPath ? paths.resolveAppPath(entryPath) : paths.appIndex;
+    const isHasHtml = await paths.isFileExists(htmlurl);
     const threadLoaderOpts = {
         workers: isProduction ? osSize : osSize - 1,
         workerParallelJobs: 50,
@@ -215,7 +217,7 @@ exports.default = ({ env, entryPath }) => {
             }),
             new HtmlWebpackPlugin({
                 filename: 'index.html',
-                template: paths.resolveAppPath('src/public/index.html'),
+                template: isHasHtml ? paths.resolveAppPath(htmlurl) : './template.html',
                 inject: true,
                 ...(isProduction ? {
                     minify: {

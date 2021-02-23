@@ -23,12 +23,14 @@ interface ConfigOptions {
   entryPath: string | undefined;
 }
 
-export default ({ env, entryPath }: ConfigOptions) => {
+export default async ({ env, entryPath }: ConfigOptions) => {
   const isDevelopment = env === 'development';
   const isProduction = env === 'production';
+  const htmlurl = 'public/index.html';
 
   const babelOpts = babelrc({ isDevelopment });
   const entryIndex = entryPath ? paths.resolveAppPath(entryPath) : paths.appIndex;
+  const isHasHtml = await paths.isFileExists(htmlurl);
 
   const threadLoaderOpts = {
     workers: isProduction ? osSize : osSize - 1,
@@ -228,7 +230,7 @@ export default ({ env, entryPath }: ConfigOptions) => {
       }),
       new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: paths.resolveAppPath('src/public/index.html'),
+        template: isHasHtml ? paths.resolveAppPath(htmlurl) : './template.html',
         inject: true,
         ...(
           isProduction ? {

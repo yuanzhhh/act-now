@@ -42,7 +42,7 @@ function koaHotMiddleware(hotMiddleware) {
 exports.default = async ({ env, entryPath }) => {
     const app = new Koa();
     const router = new Router();
-    const config = webpack_config_1.default({ env, entryPath });
+    const config = await webpack_config_1.default({ env, entryPath });
     const compiler = webpack(config);
     const hotCompiler = hotMid(compiler);
     const instance = middleware(compiler, {
@@ -55,18 +55,14 @@ exports.default = async ({ env, entryPath }) => {
         },
         publicPath: config.output.publicPath,
     });
-    await new Promise(resolve => {
-        fs.access(paths.resolveAppPath('.act-now.js'), (err) => {
-            if (!err) {
-                const actconfig = require(paths.resolveAppPath('.act-now'));
-                for (let key in actconfig.proxys) {
-                    const middleware = createProxyMiddleware(key, Object.assign(actconfig.proxys[key], {}));
-                    app.use(c2k(middleware));
-                }
-            }
-            resolve(err);
-        });
-    });
+    if (await paths.isFileExists('.act-now.js')) {
+        const actconfig = require(paths.resolveAppPath('.act-now'));
+        for (let key in actconfig.proxys) {
+            const middleware = createProxyMiddleware(key, Object.assign(actconfig.proxys[key], {}));
+            app.use(c2k(middleware));
+        }
+    }
+    ;
     app.use(router.routes(), router.allowedMethods());
     app.use(koaDevMiddleware(instance));
     app.use(koaHotMiddleware(hotCompiler));

@@ -2,7 +2,7 @@ interface ConfigOptions {
     env: 'development' | 'production';
     entryPath: string | undefined;
 }
-declare const _default: ({ env, entryPath }: ConfigOptions) => {
+declare const _default: ({ env, entryPath }: ConfigOptions) => Promise<{
     mode: string;
     devtool: string;
     entry: any;
@@ -148,5 +148,5 @@ declare const _default: ({ env, entryPath }: ConfigOptions) => {
         }[];
     };
     plugins: any[];
-};
+}>;
 export default _default;
