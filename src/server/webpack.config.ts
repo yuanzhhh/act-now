@@ -18,12 +18,20 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 import babelrc from './babelrc';
 import * as paths from '../paths';
 
+type CommonType = {
+  [key: string]: any;
+};
+
 interface ConfigOptions {
   env: 'development' | 'production';
   entryPath: string | undefined;
+  actConfig: {
+    proxys: CommonType;
+    env: CommonType;
+  };
 }
 
-export default async ({ env, entryPath }: ConfigOptions) => {
+export default async ({ env, entryPath, actConfig }: ConfigOptions) => {
   const isDevelopment = env === 'development';
   const isProduction = env === 'production';
   const htmlurl = 'public/index.html';
@@ -226,7 +234,14 @@ export default async ({ env, entryPath }: ConfigOptions) => {
       new FriendlyErrorsWebpackPlugin(),
       isProduction && new webpack.optimize.ModuleConcatenationPlugin(),
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
+        'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
+        ...(() => {
+          const confEnv: CommonType = {};
+          for (const envName in actConfig.env)
+            confEnv[`process.env.${envName}`] = JSON.stringify(actConfig.env[envName])
+
+          return confEnv;
+        })()
       }),
       new HtmlWebpackPlugin({
         filename: 'index.html',

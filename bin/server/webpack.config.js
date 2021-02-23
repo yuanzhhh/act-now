@@ -18,7 +18,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const babelrc_1 = require("./babelrc");
 const paths = require("../paths");
-exports.default = async ({ env, entryPath }) => {
+exports.default = async ({ env, entryPath, actConfig }) => {
     const isDevelopment = env === 'development';
     const isProduction = env === 'production';
     const htmlurl = 'public/index.html';
@@ -213,7 +213,13 @@ exports.default = async ({ env, entryPath }) => {
             new FriendlyErrorsWebpackPlugin(),
             isProduction && new webpack.optimize.ModuleConcatenationPlugin(),
             new webpack.DefinePlugin({
-                'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
+                'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
+                ...(() => {
+                    const confEnv = {};
+                    for (const envName in actConfig.env)
+                        confEnv[`process.env.${envName}`] = JSON.stringify(actConfig.env[envName]);
+                    return confEnv;
+                })()
             }),
             new HtmlWebpackPlugin({
                 filename: 'index.html',

@@ -4,13 +4,15 @@ const webpack = require('webpack');
 const chalk = require('chalk');
 
 import webpackConfig from '../server/webpack.config';
+import * as paths from '../paths';
 
 const build = async (entryPath?: string) => {
   process.env.NODE_ENV = 'production';
   const log = console.log;
   const env = process.env.NODE_ENV as 'production';
 
-  const config = await webpackConfig({ env, entryPath });
+  let actConfig = await paths.actConfig();
+  const config = await webpackConfig({ env, entryPath, actConfig });
   const compiler = webpack(config);
 
   new Promise((resolve, reject) => {

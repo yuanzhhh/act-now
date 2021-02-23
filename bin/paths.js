@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.appIndex = exports.appPackage = exports.isFileExists = exports.resolveAppPath = exports.appPath = void 0;
+exports.actConfig = exports.appIndex = exports.appPackage = exports.isFileExists = exports.resolveAppPath = exports.appPath = void 0;
 const fs = require('fs');
 const path = require('path');
 exports.appPath = fs.realpathSync(process.cwd());
@@ -10,4 +10,6 @@ const isFileExists = (url) => new Promise((resolve) => fs.access(exports.resolve
 exports.isFileExists = isFileExists;
 exports.appPackage = require(exports.resolveAppPath('package.json'));
 exports.appIndex = exports.resolveAppPath(exports.appPackage.main);
+const actConfig = async () => await exports.isFileExists('.act-now.js') && require(exports.resolveAppPath('.act-now'));
+exports.actConfig = actConfig;
 //# sourceMappingURL=paths.js.map

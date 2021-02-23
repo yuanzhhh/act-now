@@ -11,3 +11,5 @@ export const isFileExists = (url: string) =>
 
 export const appPackage = require(resolveAppPath('package.json'));
 export const appIndex = resolveAppPath(appPackage.main);
+export const actConfig = async () =>
+  await isFileExists('.act-now.js') && require(resolveAppPath('.act-now'));

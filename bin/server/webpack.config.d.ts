@@ -1,8 +1,15 @@
+declare type CommonType = {
+    [key: string]: any;
+};
 interface ConfigOptions {
     env: 'development' | 'production';
     entryPath: string | undefined;
+    actConfig: {
+        proxys: CommonType;
+        env: CommonType;
+    };
 }
-declare const _default: ({ env, entryPath }: ConfigOptions) => Promise<{
+declare const _default: ({ env, entryPath, actConfig }: ConfigOptions) => Promise<{
     mode: string;
     devtool: string;
     entry: any;
