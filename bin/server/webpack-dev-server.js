@@ -11,11 +11,10 @@ const Router = require('@koa/router');
 const c2k = require('koa-connect');
 const path = require('path');
 const open = require('open');
-const chalk = require('chalk');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const webpack_config_1 = require("./webpack.config");
 const paths = require("../paths");
-const log = console.log;
+const log = require("../log");
 const keyOpts = {
     key: fs.readFileSync(path.resolve(__dirname, '../../src/server/privatekey.pem')),
     cert: fs.readFileSync(path.resolve(__dirname, '../../src/server/certificate.pem')),
@@ -48,11 +47,12 @@ exports.default = async ({ env, entryPath }) => {
                  */
                 if (actConfig.browserOpen)
                     await open(`https://localhost:${actConfig.protocol['https-port']}`);
-                log(chalk.bold.white(`https://localhost:${actConfig.protocol['https-port']}`));
-                log(chalk.bold.white(`https://localhost:${actConfig.protocol['http-port']}`));
+                log.info(`https://localhost:${actConfig.protocol['https-port']}`);
+                log.info(`https://localhost:${actConfig.protocol['http-port']}`);
+                log.success('Compiler done, Monitoring file');
             },
-            warn: (warn) => log(chalk.bold.yellow(warn)),
-            error: (err) => log(chalk.bold.red(err)),
+            warn: (warn) => log.warn(warn),
+            error: (err) => log.error(err),
         },
         publicPath: config.output.publicPath,
     });
