@@ -10,12 +10,11 @@ const build = async (entryPath?: string) => {
   process.env.NODE_ENV = 'production';
   const env = process.env.NODE_ENV as 'production';
 
-  let actConfig = await paths.actConfig();
+  const actConfig = await paths.actConfig();
   const config = await webpackConfig({ env, entryPath, actConfig });
-  const compiler = webpack(config);
 
   new Promise((resolve, reject) =>
-    compiler.run((err: unknown, stats: unknown) => {
+    webpack(config).run((err: unknown, stats: unknown) => {
       if (err) return reject(err);
 
       return resolve(stats);

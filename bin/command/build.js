@@ -7,10 +7,9 @@ const log = require("../log");
 const build = async (entryPath) => {
     process.env.NODE_ENV = 'production';
     const env = process.env.NODE_ENV;
-    let actConfig = await paths.actConfig();
+    const actConfig = await paths.actConfig();
     const config = await webpack_config_1.default({ env, entryPath, actConfig });
-    const compiler = webpack(config);
-    new Promise((resolve, reject) => compiler.run((err, stats) => {
+    new Promise((resolve, reject) => webpack(config).run((err, stats) => {
         if (err)
             return reject(err);
         return resolve(stats);
